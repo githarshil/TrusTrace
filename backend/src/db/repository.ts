@@ -1,4 +1,8 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { AppEnv } from "../core/env.js";
+import { SnapshotVersionCache } from "../core/snapshotCache.js";
 import { getSupabaseAdminClient } from "./supabase.js";
 import {
   DEMO_DATASET,
@@ -9,6 +13,10 @@ import {
   type SnapshotRecord,
   type StockRecord,
 } from "../ingestion/demoCorpus.js";
+import {
+  SEBI_SNAPSHOT_JSON_PATH,
+  type PersistedSebiSnapshotFile,
+} from "../ingestion/importSebiRegister.js";
 import type {
   PriceBar,
   StockInfoSnapshot,
@@ -47,12 +55,37 @@ function unwrapRelation<T>(value: T | T[] | null | undefined): T | null {
   return Array.isArray(value) ? (value[0] ?? null) : value;
 }
 
+const __repoDir = path.dirname(fileURLToPath(import.meta.url));
+
+function loadLocalSebiSnapshotFile(): PersistedSebiSnapshotFile | null {
+  const candidates = [
+    SEBI_SNAPSHOT_JSON_PATH,
+    path.resolve(__repoDir, "../../src/ingestion/data/sebi_register_snapshot.json"),
+  ];
+  for (const candidate of candidates) {
+    try {
+      if (!fs.existsSync(candidate)) continue;
+      const raw = fs.readFileSync(candidate, "utf8");
+      const parsed = JSON.parse(raw) as PersistedSebiSnapshotFile;
+      if (parsed && Array.isArray(parsed.entries) && parsed.entries.length > 0) {
+        return parsed;
+      }
+    } catch {
+      // Try next candidate path
+    }
+  }
+  return null;
+}
+
 /**
- * In-memory validated snapshot repository backed by the curated demo corpus,
- * with automatic live Supabase PostgreSQL reads when SUPABASE_SERVICE_ROLE_KEY is configured.
+ * In-memory validated snapshot repository backed by the curated demo corpus &
+ * official dated SEBI snapshot file, with automatic live Supabase PostgreSQL reads
+ * when SUPABASE_SERVICE_ROLE_KEY is configured.
  */
 export function createEvidenceRepository(config: AppEnv): EvidenceRepository {
   const supabase = getSupabaseAdminClient(config);
+  const sebiSnapshotCache = new SnapshotVersionCache({ maxEntries: 8, defaultTtlMs: 300_000 });
+  const localSebiSnapshot = loadLocalSebiSnapshotFile();
 
   return {
     async listSnapshots(): Promise<SnapshotRecord[]> {
@@ -64,6 +97,28 @@ export function createEvidenceRepository(config: AppEnv): EvidenceRepository {
         if (!error && data && data.length > 0) {
           return data as SnapshotRecord[];
         }
+      }
+      if (localSebiSnapshot) {
+        const withoutDemoSebi = DEMO_DATASET.snapshots.filter(
+          (s) => s.dataset_key !== "sebi_register"
+        );
+        return [
+          {
+            id: localSebiSnapshot.snapshot_id,
+            dataset_key: localSebiSnapshot.dataset_key,
+            source_name: localSebiSnapshot.source_name,
+            source_url: localSebiSnapshot.source_url,
+            as_of_date: localSebiSnapshot.as_of_date,
+            retrieved_at: localSebiSnapshot.retrieved_at,
+            data_label: localSebiSnapshot.data_label,
+            version: localSebiSnapshot.version,
+            checksum: localSebiSnapshot.checksum,
+            row_count: localSebiSnapshot.row_count,
+            validation_status: localSebiSnapshot.validation_status,
+            notes: localSebiSnapshot.notes,
+          },
+          ...withoutDemoSebi,
+        ];
       }
       return DEMO_DATASET.snapshots;
     },
@@ -115,34 +170,74 @@ export function createEvidenceRepository(config: AppEnv): EvidenceRepository {
 
     async listSebiEntries() {
       if (supabase) {
-        const { data, error } = await supabase
-          .from("sebi_register_entry")
-          .select("id, snapshot_id, name, normalized_name, registration_no, category, snapshot_date, data_snapshot(data_label)")
-          .order("snapshot_date", { ascending: false });
-        if (!error && data && data.length > 0) {
-          const rows = data as unknown as Array<
-            SebiRegisterEntryRecord & {
-              data_snapshot: { data_label: DataLabel } | Array<{ data_label: DataLabel }> | null;
-            }
-          >;
-          const first = rows[0]!;
-          const firstSnap = unwrapRelation(first.data_snapshot);
-          return {
-            entries: rows.map((r) => ({
-              id: r.id,
-              snapshot_id: r.snapshot_id,
-              name: r.name,
-              normalized_name: r.normalized_name,
-              registration_no: r.registration_no,
-              category: r.category,
-              snapshot_date: r.snapshot_date,
-            })),
-            snapshotId: first.snapshot_id,
-            snapshotDate: first.snapshot_date,
-            dataLabel: firstSnap?.data_label ?? "MIXED",
-          };
+        // Select the latest valid sebi_register snapshot (preferring REAL over MIXED/SYNTHETIC)
+        const { data: snaps, error: snapErr } = await supabase
+          .from("data_snapshot")
+          .select("id, as_of_date, data_label")
+          .eq("dataset_key", "sebi_register")
+          .in("validation_status", ["VALID", "PARTIAL"])
+          .order("as_of_date", { ascending: false })
+          .limit(10);
+
+        const chosenSnap =
+          !snapErr && snaps && snaps.length > 0
+            ? ((snaps as Array<{ id: string; as_of_date: string; data_label: DataLabel }>).find(
+                (s) => s.data_label === "REAL"
+              ) ?? (snaps[0] as { id: string; as_of_date: string; data_label: DataLabel }))
+            : null;
+
+        if (chosenSnap) {
+          const cacheKey = SnapshotVersionCache.buildKey({
+            namespace: "sebi_register",
+            snapshotVersion: chosenSnap.id,
+            params: {},
+          });
+          const cached = sebiSnapshotCache.get<{
+            entries: SebiRegisterEntryRecord[];
+            snapshotId: string | null;
+            snapshotDate: string | null;
+            dataLabel: DataLabel | null;
+          }>(cacheKey);
+          if (cached) return cached;
+
+          // Paginate in 1,000-row chunks so Supabase's default row cap never truncates the register
+          const allEntries: SebiRegisterEntryRecord[] = [];
+          const pageSize = 1000;
+          for (let offset = 0; offset < 20_000; offset += pageSize) {
+            const { data, error } = await supabase
+              .from("sebi_register_entry")
+              .select("id, snapshot_id, name, normalized_name, registration_no, category, snapshot_date")
+              .eq("snapshot_id", chosenSnap.id)
+              .order("registration_no", { ascending: true })
+              .range(offset, offset + pageSize - 1);
+
+            if (error || !data || data.length === 0) break;
+            allEntries.push(...(data as SebiRegisterEntryRecord[]));
+            if (data.length < pageSize) break;
+          }
+
+          if (allEntries.length > 0) {
+            const result = {
+              entries: allEntries,
+              snapshotId: chosenSnap.id,
+              snapshotDate: chosenSnap.as_of_date,
+              dataLabel: chosenSnap.data_label,
+            };
+            sebiSnapshotCache.set(cacheKey, result);
+            return result;
+          }
         }
       }
+
+      if (localSebiSnapshot) {
+        return {
+          entries: localSebiSnapshot.entries,
+          snapshotId: localSebiSnapshot.snapshot_id,
+          snapshotDate: localSebiSnapshot.as_of_date,
+          dataLabel: localSebiSnapshot.data_label,
+        };
+      }
+
       const sebiSnap = DEMO_DATASET.snapshots.find((s) => s.dataset_key === "sebi_register");
       return {
         entries: DEMO_DATASET.sebiEntries,

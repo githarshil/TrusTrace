@@ -33,6 +33,11 @@ const FinfluencersPage = lazy(() =>
     default: m.FinfluencersPage,
   }))
 );
+const SocialIntelligencePage = lazy(() =>
+  import("../features/social-intelligence/SocialIntelligencePage").then((m) => ({
+    default: m.SocialIntelligencePage,
+  }))
+);
 const DemoCorpusPage = lazy(() =>
   import("../features/dashboard/WorkspacePlaceholderPages").then((m) => ({
     default: m.DemoCorpusPage,
@@ -81,6 +86,7 @@ export function AppRoutes() {
           <Route path="/stocks" element={<RealTimeStocksPage />} />
           <Route path="/pretend-money" element={<PretendMoneyPage />} />
           <Route path="/finfluencers" element={<FinfluencersPage />} />
+          <Route path="/social-intelligence" element={<SocialIntelligencePage />} />
           <Route path="/corpus" element={<DemoCorpusPage />} />
           <Route path="/how-it-works" element={<HowChecksWorkPage />} />
         </Route>

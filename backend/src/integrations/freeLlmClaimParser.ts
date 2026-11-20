@@ -10,6 +10,92 @@ import type { ClaimLedger, SourceSpan, TipDirection } from "../domain/types.js";
 import { logWarn } from "../core/logger.js";
 
 const FREE_LLM_TIMEOUT_MS = 10_000;
+const GEMINI_VISION_OCR_TIMEOUT_MS = 12_000;
+
+const RawVisionOcrSchema = z.object({
+  extracted_text: z.string().max(4000).default(""),
+});
+
+const BOUNDED_VISION_OCR_PROMPT = `You are a strictly bounded verbatim OCR transcriber for Indian retail stock-tip screenshots (English or Hinglish).
+Rules:
+1. Transcribe ONLY the exact visible text in the image verbatim, preserving stock/index names, numbers, prices, dates, hashtags, disclosures, and gated stop-loss cues (such as "SL PAID", "SL. VIP PREMIUM").
+2. Return ONLY a valid JSON object matching this exact schema: { "extracted_text": string }.
+3. Do NOT invent missing fields, summarize, translate, calculate anything, or output investment advice or commentary.
+4. If no text is legible in the image, return { "extracted_text": "" }.`;
+
+/**
+ * Bounded transient Gemini 2.5 Flash Vision OCR extractor.
+ * - Accepts an in-memory image buffer (JPEG, PNG, WebP) and returns ONLY verbatim visible text.
+ * - Never persists the image or logs image bytes or raw extracted user text.
+ */
+export async function extractTextFromPhotoWithGeminiVision(params: {
+  buffer: Buffer;
+  mimeType: string;
+  apiKey: string;
+  fetchImpl?: typeof fetch;
+}): Promise<string | null> {
+  const fetchImpl = params.fetchImpl ?? fetch;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(
+    params.apiKey
+  )}`;
+
+  try {
+    const response = await fetchImpl(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: BOUNDED_VISION_OCR_PROMPT },
+              {
+                inlineData: {
+                  mimeType: params.mimeType,
+                  data: params.buffer.toString("base64"),
+                },
+              },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0,
+          responseMimeType: "application/json",
+        },
+      }),
+      signal: AbortSignal.timeout(GEMINI_VISION_OCR_TIMEOUT_MS),
+    });
+
+    if (!response.ok) {
+      logWarn("gemini_vision_ocr.http_error", { status: response.status });
+      return null;
+    }
+
+    const data = (await response.json()) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawText) {
+      logWarn("gemini_vision_ocr.empty_response", {});
+      return null;
+    }
+
+    const parsedJson = JSON.parse(rawText) as unknown;
+    const validated = RawVisionOcrSchema.safeParse(parsedJson);
+    if (!validated.success) {
+      logWarn("gemini_vision_ocr.schema_invalid", {});
+      return null;
+    }
+
+    const cleaned = validated.data.extracted_text.trim();
+    return cleaned.length > 0 ? cleaned : null;
+  } catch (err) {
+    logWarn("gemini_vision_ocr.fallback_triggered", {
+      reason: err instanceof Error ? err.message : "unknown",
+    });
+    return null;
+  }
+}
 
 const RawLlmExtractionSchema = z.object({
   stock: z.string().nullable().optional(),

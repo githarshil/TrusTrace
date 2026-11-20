@@ -818,8 +818,11 @@ export function AnalyzeWorkspacePage() {
       {state.activeStep === 2 && (
         <div className="space-y-5">
           {state.parseResult?.media_intake.notice && (
-            <div className="rounded-2xl border border-[rgba(74,124,100,0.25)] bg-[#E6F2EC]/70 px-4 py-3 text-[13.5px] text-[#1F4D3A]">
-              {state.parseResult.media_intake.notice}
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[rgba(74,124,100,0.25)] bg-[#E6F2EC]/70 px-4 py-3 text-[13.5px] text-[#1F4D3A]">
+              <span>{state.parseResult.media_intake.notice}</span>
+              {state.parseResult.media_intake.extraction_mode === "GEMINI_VISION_OCR" && (
+                <StatusBadge tone="neutral_ok" label="Transient Vision OCR · Image discarded" />
+              )}
             </div>
           )}
 

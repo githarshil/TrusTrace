@@ -1,0 +1,280 @@
+/* ==========================================================================
+   VoiceAssistantOrb — Organic Liquid Glass Green Talking Blob (DESIGN.md)
+   ========================================================================== */
+
+.voice-orb-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 224px;
+  height: 224px;
+  margin-inline: auto;
+  user-select: none;
+}
+
+.voice-orb-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 176px;
+  height: 176px;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 9999px;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.voice-orb-button:focus-visible {
+  outline: 2.5px solid #1F4D3A;
+  outline-offset: 10px;
+}
+
+/* Soft concentric mint ambient rings */
+.voice-orb-halo {
+  position: absolute;
+  inset: -14px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(74, 124, 100, 0.24) 0%,
+    rgba(184, 216, 200, 0.14) 50%,
+    rgba(184, 216, 200, 0) 74%
+  );
+  pointer-events: none;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease;
+}
+
+.voice-orb-ring {
+  position: absolute;
+  inset: 6px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(74, 124, 100, 0.26);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.voice-orb-stage--listening .voice-orb-ring,
+.voice-orb-stage--speaking .voice-orb-ring {
+  animation: voiceOrbRipple 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.voice-orb-stage--speaking .voice-orb-ring--delayed,
+.voice-orb-stage--listening .voice-orb-ring--delayed {
+  animation: voiceOrbRipple 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.95s infinite;
+}
+
+/* Primary Organic Sage / Forest-Green Talking Blob */
+.voice-orb-blob {
+  position: relative;
+  width: 152px;
+  height: 152px;
+  border-radius: 56% 44% 52% 48% / 48% 54% 46% 52%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #C7E4D4 0%,
+    #63A98A 32%,
+    #3B7A5D 66%,
+    #1F4D3A 100%
+  );
+  box-shadow:
+    0 20px 44px -10px rgba(31, 77, 58, 0.42),
+    0 6px 18px -4px rgba(74, 124, 100, 0.28),
+    inset 0 2px 12px rgba(255, 255, 255, 0.55),
+    inset 0 -10px 20px rgba(18, 53, 40, 0.4);
+  transition: transform 110ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, border-radius;
+}
+
+/* Translucent Liquid Glass Inner Morphing Layer */
+.voice-orb-blob-inner {
+  position: absolute;
+  inset: 10px;
+  border-radius: 48% 52% 44% 56% / 54% 46% 52% 48%;
+  background: radial-gradient(
+    circle at 68% 70%,
+    rgba(184, 216, 200, 0.55) 0%,
+    rgba(74, 124, 100, 0.22) 48%,
+    rgba(255, 255, 255, 0) 76%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Specular top glass sheen */
+.voice-orb-specular {
+  position: absolute;
+  top: 18px;
+  left: 28px;
+  width: 58px;
+  height: 30px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.68) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  transform: rotate(-22deg);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Center subtle icon/waveform badge */
+.voice-orb-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(250, 248, 244, 0.96);
+  pointer-events: none;
+}
+
+/* Live mic-reactive vertical equalizer bars when user is speaking & AI is listening */
+.voice-orb-bars {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 44px;
+}
+
+.voice-orb-bar {
+  width: 5px;
+  min-height: 10px;
+  border-radius: 9999px;
+  background: rgba(250, 248, 244, 0.96);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
+  transition: height 95ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Orbital working ring while AI is checking evidence & synthesizing Sarvam TTS */
+.voice-orb-orbit {
+  position: absolute;
+  inset: 8px;
+  border-radius: 9999px;
+  border: 2.5px solid rgba(74, 124, 100, 0.16);
+  border-top-color: #1F4D3A;
+  border-right-color: #4A7C64;
+  pointer-events: none;
+  animation: voiceInnerSpin 1.15s linear infinite;
+}
+
+/* State-specific organic morphing animations */
+.voice-orb-stage--idle .voice-orb-blob {
+  animation: voiceBlobBreathe 5.5s ease-in-out infinite;
+}
+
+.voice-orb-stage--listening .voice-orb-blob {
+  animation: voiceBlobListen 2.2s ease-in-out infinite;
+}
+
+.voice-orb-stage--thinking .voice-orb-blob {
+  animation: voiceBlobThink 1.8s ease-in-out infinite;
+}
+
+.voice-orb-stage--thinking .voice-orb-blob-inner {
+  animation: voiceInnerSpin 2.6s linear infinite;
+}
+
+.voice-orb-stage--speaking .voice-orb-blob {
+  animation: voiceBlobTalk 1.05s ease-in-out infinite;
+}
+
+.voice-orb-stage--speaking .voice-orb-blob-inner {
+  animation: voiceBlobTalkInner 0.85s ease-in-out infinite alternate;
+}
+
+@keyframes voiceBlobBreathe {
+  0%,
+  100% {
+    border-radius: 54% 46% 52% 48% / 48% 54% 46% 52%;
+    transform: scale(1);
+  }
+  50% {
+    border-radius: 48% 52% 46% 54% / 52% 48% 54% 46%;
+    transform: scale(1.035);
+  }
+}
+
+@keyframes voiceBlobListen {
+  0%,
+  100% {
+    border-radius: 58% 42% 54% 46% / 44% 58% 42% 56%;
+  }
+  50% {
+    border-radius: 44% 56% 42% 58% / 56% 44% 58% 42%;
+  }
+}
+
+@keyframes voiceBlobThink {
+  0%,
+  100% {
+    border-radius: 52% 48% 50% 50% / 50% 50% 48% 52%;
+    transform: scale(0.97);
+  }
+  50% {
+    border-radius: 46% 54% 54% 46% / 54% 46% 46% 54%;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes voiceBlobTalk {
+  0% {
+    border-radius: 60% 40% 55% 45% / 45% 58% 42% 55%;
+  }
+  33% {
+    border-radius: 42% 58% 44% 56% / 58% 42% 56% 44%;
+  }
+  66% {
+    border-radius: 54% 46% 60% 40% / 44% 54% 46% 56%;
+  }
+  100% {
+    border-radius: 60% 40% 55% 45% / 45% 58% 42% 55%;
+  }
+}
+
+@keyframes voiceBlobTalkInner {
+  0% {
+    transform: scale(0.92) rotate(0deg);
+    opacity: 0.72;
+  }
+  100% {
+    transform: scale(1.12) rotate(24deg);
+    opacity: 1;
+  }
+}
+
+@keyframes voiceInnerSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes voiceOrbRipple {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.36);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-orb-blob,
+  .voice-orb-blob-inner,
+  .voice-orb-ring,
+  .voice-orb-orbit {
+    animation: none !important;
+    transition: none !important;
+  }
+}

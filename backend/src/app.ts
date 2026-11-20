@@ -9,6 +9,7 @@ import { createAutopsyRouter } from "./api/routes/autopsy.js";
 import { createFinfluencersRouter } from "./api/routes/finfluencers.js";
 import { createHealthRouter } from "./api/routes/health.js";
 import { createLiveStocksRouter } from "./api/routes/liveStocks.js";
+import { createResearchRouter } from "./api/routes/research.js";
 import {
   createFinfluencerAlertRepository,
   type FinfluencerAlertRepository,
@@ -88,6 +89,15 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.use(
     "/api",
     createFinfluencersRouter({
+      config,
+      evidenceRepo: repo,
+      alertRepo,
+      fetchImpl: options.fetchImpl,
+    })
+  );
+  app.use(
+    "/api",
+    createResearchRouter({
       config,
       evidenceRepo: repo,
       alertRepo,

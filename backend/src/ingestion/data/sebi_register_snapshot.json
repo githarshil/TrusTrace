@@ -1,0 +1,475 @@
+{
+  "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+  "dataset_key": "sebi_register",
+  "source_name": "SEBI Official Recognised Intermediaries Directory (RA & IA)",
+  "source_url": "https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecognisedFpi=yes&intmId=14",
+  "as_of_date": "2026-11-20",
+  "retrieved_at": "2026-11-20T21:47:48.800Z",
+  "data_label": "REAL",
+  "version": "sebi-official-2026-11-20",
+  "checksum": "d953feba4de6621166ccbf9cc9d1f93b324b995a93b9ed4c6188d9c1b675e855",
+  "row_count": 51,
+  "validation_status": "VALID",
+  "notes": "Fetched from official public sebi.gov.in Research Analyst (intmId=14) and Investment Adviser (intmId=13) directories plus curated demo corpus verified RAs. Import full browser-exported CSV via `npm run ingest:sebi -- --file <path.csv>` to expand coverage.",
+  "entries": [
+    {
+      "id": "9bc9e4fd-f2e9-4818-8b3b-e66b27e83063",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "360 ONE Capital Market Private Limited",
+      "normalized_name": "360 one capital market private limited",
+      "registration_no": "INH300000211",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "165f219c-b0ce-486c-8dbd-819d08da6247",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "360 ONE Distribution Services Limited",
+      "normalized_name": "360 one distribution services limited",
+      "registration_no": "INH000011431",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "7c69eee4-a579-4cc5-8440-e9fb18a08619",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "5 CIRCLES PRIVATE LIMITED",
+      "normalized_name": "5 circles private limited",
+      "registration_no": "INH000020004",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "b6e9171a-9985-42b9-8fe3-199b339a91db",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "5paisa Capital Limited",
+      "normalized_name": "5paisa capital limited",
+      "registration_no": "INH000025188",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "71bd3f67-9b17-48ce-8361-1f04896100b3",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "72 STREET RA PRIVATE LIMITED",
+      "normalized_name": "72 street ra private limited",
+      "registration_no": "INH000029722",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "f0199435-4589-4366-8eff-1dce536a8518",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "A C Agarwal Share Brokers Private Limited",
+      "normalized_name": "a c agarwal share brokers private limited",
+      "registration_no": "INH000023913",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "8d96297a-38a0-4801-8c05-6bf7779aec54",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "A K EQUITIES PRIVATE LIMITED",
+      "normalized_name": "a k equities private limited",
+      "registration_no": "INH000025692",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "6d48622b-9778-4b99-8296-084b6259ae80",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "A&Y MARKET RESEARCH",
+      "normalized_name": "a y market research",
+      "registration_no": "INH000015419",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "b1511a3c-3313-4e65-8b68-64ddc50aad7e",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "AAA PROFIT ANALYTICS PRIVATE LIMITED",
+      "normalized_name": "aaa profit analytics private limited",
+      "registration_no": "INH200009193",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "0bb7d2a8-563a-45f9-8ba2-1037bc3b7273",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "AAKANKSHA GUPTA",
+      "normalized_name": "aakanksha gupta",
+      "registration_no": "INH000013457",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "72f8107a-de19-4724-8aaf-7c4a9c2711c3",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "AAKANKSHA PRASHANT THAKKAR Proprietor of PORTFOLIO MANTRA",
+      "normalized_name": "aakanksha prashant thakkar proprietor of portfolio mantra",
+      "registration_no": "INH000026372",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "f2fadcce-12fb-4a0b-8be8-5a1d20ca223b",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aakash Abhigyanam Rathore Proprietor of Capital Scope Research",
+      "normalized_name": "aakash abhigyanam rathore proprietor of capital scope research",
+      "registration_no": "INH000030056",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "104358ba-d0b0-4b24-89a0-e17935690109",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aakash Ashok Jajoo",
+      "normalized_name": "aakash ashok jajoo",
+      "registration_no": "INH000015312",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "e3b5a079-5689-4c48-8c46-87766566d370",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aakash Rathore Proprietor of Kuber Alpha Research",
+      "normalized_name": "aakash rathore proprietor of kuber alpha research",
+      "registration_no": "INH000013642",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "d67e0aba-2c81-4c95-8dc3-5f1aff94fc13",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aaritya Broking Private Limited",
+      "normalized_name": "aaritya broking private limited",
+      "registration_no": "INH000022172",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "71cebf4b-c01b-48df-89c5-d566c9a3cbec",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aarohi Palak Shah",
+      "normalized_name": "aarohi palak shah",
+      "registration_no": "INH000018832",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "46156c98-8615-44e9-8e95-2fc2fa038fa9",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aashish",
+      "normalized_name": "aashish",
+      "registration_no": "INH000013174",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "c118de11-6d4a-449d-8336-3d682540983c",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aashish bansal",
+      "normalized_name": "aashish bansal",
+      "registration_no": "INH000023533",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "feff95c2-6da0-499f-8038-19fd8eb87483",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aastha Fintech Private Limited",
+      "normalized_name": "aastha fintech private limited",
+      "registration_no": "INH000021678",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "571e9fd1-96dd-4317-842a-434c1ad9555d",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aayush Deepak Badade",
+      "normalized_name": "aayush deepak badade",
+      "registration_no": "INH000027229",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "eb2bfb56-1a06-4a6c-899a-ea193728cde2",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABALESH RATHA",
+      "normalized_name": "abalesh ratha",
+      "registration_no": "INH000032188",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "a829f54d-5ed1-4285-8ed2-316c99e37171",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABANS BROKING SERVICES PRIVATE LIMITED",
+      "normalized_name": "abans broking services private limited",
+      "registration_no": "INH000006369",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "6f51c3a2-03ba-41fb-8669-8fdc6b0794d9",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abdullah Zaman",
+      "normalized_name": "abdullah zaman",
+      "registration_no": "INH000013244",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "eff6614a-34b8-406d-8403-a1ef1b83b6af",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abhay Kumar",
+      "normalized_name": "abhay kumar",
+      "registration_no": "INH300008465",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "e3698433-f0a0-4a5b-87fe-afb574ffffde",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abhay Kumar Sharma Proprietor of Wealth Grow Research",
+      "normalized_name": "abhay kumar sharma proprietor of wealth grow research",
+      "registration_no": "INH000028459",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "8e87ee4c-de66-4207-8d7e-ba638a9c2c6d",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "1 Finance Private Limited",
+      "normalized_name": "1 finance private limited",
+      "registration_no": "INA000017523",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "30d8fa49-b2fa-4d55-85e9-d29322f0caff",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "21G INVESTMENT ADVISERS PRIVATE LIMITED",
+      "normalized_name": "21g investment advisers private limited",
+      "registration_no": "INA000017231",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "9630e42c-66bd-486c-8546-cca99a5060fa",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "29K INVESTMENT ADVISERS PRIVATE LTD",
+      "normalized_name": "29k investment advisers private ltd",
+      "registration_no": "INA200000365",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "737d9110-64a7-4f65-82f1-f3cc88e90b6a",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "360 ONE Investment Adviser and Trustee Services Limited",
+      "normalized_name": "360 one investment adviser and trustee services limited",
+      "registration_no": "INA000000888",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "af6d346f-bafd-42d2-8ef9-c3d216a82f75",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "3Q FINANCIAL SERVICES PRIVATE LIMITED",
+      "normalized_name": "3q financial services private limited",
+      "registration_no": "INA000020794",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "c96f54ff-6716-43cf-8f5d-4af27e0964c1",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "90-10 Financial Planners Pvt Ltd",
+      "normalized_name": "90 10 financial planners pvt ltd",
+      "registration_no": "INA200008291",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "46bfe247-14ac-42ec-80dd-d8a944c7cc54",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "A AND A Capital",
+      "normalized_name": "a and a capital",
+      "registration_no": "INA000023232",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "38619eee-ccc9-461f-8b9c-f3ff3172a4e8",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "A58 KNOWLEDGE SERVICES PRIVATE LIMITED",
+      "normalized_name": "a58 knowledge services private limited",
+      "registration_no": "INA000022419",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "8004df0f-9d20-4369-8027-f589862ed480",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aalok Vidyarthi",
+      "normalized_name": "aalok vidyarthi",
+      "registration_no": "INA000023852",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "8f291939-0b04-4087-8f9c-b7db6f00b73e",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aarti Mohan (Proprietor : Aurion Advisors)",
+      "normalized_name": "aarti mohan proprietor aurion advisors ",
+      "registration_no": "INA000016454",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "9a81c635-03bf-46dd-8f58-574ebc916d0d",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Aastha Rathore Proprietor of Sky Line Capital Research",
+      "normalized_name": "aastha rathore proprietor of sky line capital research",
+      "registration_no": "INA000023348",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "0279f79d-7e7c-468a-8c89-00d64b02bad9",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "AAUM INVESTMENT ADVISERS PRIVATE LIMITED",
+      "normalized_name": "aaum investment advisers private limited",
+      "registration_no": "INA100005050",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "1ec1c900-d590-403b-851a-d5b2b08051a2",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abakkus Asset Manager Private Limited",
+      "normalized_name": "abakkus asset manager private limited",
+      "registration_no": "INA000015729",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "d34f0790-d78f-4539-8a7f-5811a04bd41f",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abhijit Talukdar",
+      "normalized_name": "abhijit talukdar",
+      "registration_no": "INA000006703",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "1683ca6d-1621-4910-8279-1fec335b984b",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABHINAV KHATTAR",
+      "normalized_name": "abhinav khattar",
+      "registration_no": "INA000023065",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "34825ed4-6f44-4e08-885b-3711174a34bb",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abhishek Goel proprietor Primedin Investment Adviser",
+      "normalized_name": "abhishek goel proprietor primedin investment adviser",
+      "registration_no": "INA000018258",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "b01927ee-b4ea-41ec-8d50-9bc2173348cb",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABHISHEK GUPTA Proprietor Qligence Capital",
+      "normalized_name": "abhishek gupta proprietor qligence capital",
+      "registration_no": "INA000022002",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "8a0d70e1-f474-49f1-8179-fbd39e3b7044",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABHISHEK KUMAR",
+      "normalized_name": "abhishek kumar",
+      "registration_no": "INA100008045",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "42425771-6f6b-4971-8170-d96b6a330eb0",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abhishek Phore - Proprietor Control Wealth Advisers",
+      "normalized_name": "abhishek phore proprietor control wealth advisers",
+      "registration_no": "INA000019442",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "f1b9f5aa-6fc3-4dcb-83b1-d5e95aeb351d",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Abraham Cherian Proprietor 360 wealth advice",
+      "normalized_name": "abraham cherian proprietor 360 wealth advice",
+      "registration_no": "INA000019594",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "4f5e0a59-9e54-47bd-88b3-f599f02739d8",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ABUBAKR SIDDIQUE. A.G.",
+      "normalized_name": "abubakr siddique a g ",
+      "registration_no": "INA200000910",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "b546243e-fad6-47a3-8529-126a3f054d32",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Accelpru Investment Advisors",
+      "normalized_name": "accelpru investment advisors",
+      "registration_no": "INA000015774",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "e8375ecf-3321-4783-8140-ec14fca6f079",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ACME INVESTMENT ADVISORS PRIVATE LIMITED",
+      "normalized_name": "acme investment advisors private limited",
+      "registration_no": "INA000017718",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "6bb5a09d-bf1b-4fb1-890f-2dce8444eccf",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "ACUITAS CAPITAL ADVISORS PRIVATE LIMITED",
+      "normalized_name": "acuitas capital advisors private limited",
+      "registration_no": "INA000003957",
+      "category": "Investment Adviser",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "e32dcb8b-899a-48e9-8665-493d28518e9a",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Chinmay Dudhane",
+      "normalized_name": "chinmay dudhane",
+      "registration_no": "INH000012948",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    },
+    {
+      "id": "209cb55d-5a43-432c-83a9-cea09c70e5ae",
+      "snapshot_id": "8a4c8dc0-822b-4c78-8e6f-dce8a7b4f777",
+      "name": "Rakesh Bansal",
+      "normalized_name": "rakesh bansal",
+      "registration_no": "INH100008984",
+      "category": "Research Analyst",
+      "snapshot_date": "2026-11-20"
+    }
+  ]
+}

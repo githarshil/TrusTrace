@@ -17,6 +17,7 @@ import { computeCreatorTrackRecord } from "../../domain/track-record/stats.js";
 import {
   MAX_VIDEO_BYTES,
   runBoundedMultimodalParse,
+  runBoundedMultimodalParseAsync,
 } from "../../integrations/multimodalParser.js";
 import { parseClaimLedgerWithFreeAiFallback } from "../../integrations/freeLlmClaimParser.js";
 import {
@@ -142,7 +143,7 @@ export function createAutopsyRouter(params: {
         repo.listDemoCases(),
       ]);
 
-      const parsed = runBoundedMultimodalParse({
+      const parsed = await runBoundedMultimodalParseAsync({
         text: body.text,
         influencerName: body.influencer_name,
         stockName: body.stock_name,
@@ -157,6 +158,8 @@ export function createAutopsyRouter(params: {
         catalogue,
         demoCases,
         llmProvider: config.LLM_PROVIDER,
+        llmApiKey: config.LLM_API_KEY,
+        fetchImpl,
       });
 
       // Optionally enhance Claim Ledger via bounded free-tier AI (Gemini / Groq) when configured

@@ -171,10 +171,17 @@
 }
 
 .sticky-bubbly-track-wrap--open {
-  max-width: 960px;
+  max-width: min(1080px, calc(100vw - 24px));
   opacity: 1;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   pointer-events: auto;
+}
+
+.sticky-bubbly-track-wrap--open::-webkit-scrollbar {
+  display: none;
 }
 
 /* Inner List — overflow: visible when open so pill rounded caps & shadows are never clipped */

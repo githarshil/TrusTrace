@@ -589,6 +589,8 @@ Backend environment settings should include:
 - `SARVAM_API_KEY` only when voice is enabled
 - `LIVE_MARKET_ENABLED` (default `true`) and `LIVE_MARKET_CACHE_TTL_MS` (default `45000`)
 - `YOUTUBE_MONITOR_ENABLED` (default `true`) and `YOUTUBE_POLL_INTERVAL_MS` (default `180000`)
+- `YOUTUBE_DATA_API_KEY` (optional, official YouTube Data API v3 search for `/social-intelligence`)
+- `X_BEARER_TOKEN` (optional, official X API v2 recent search for `/social-intelligence`; reports `UNAVAILABLE` when unset)
 - `WHATSAPP_PROVIDER` (`dry_run`, `twilio`, `callmebot`, `meta_cloud`)
 - `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_WHATSAPP_FROM` (defaults to Twilio WhatsApp Sandbox `whatsapp:+14155238886`)
 - `META_WHATSAPP_ACCESS_TOKEN` and `META_WHATSAPP_PHONE_NUMBER_ID` (only when using official Meta Cloud API)
@@ -611,6 +613,10 @@ Frontend environment settings may include only public values such as `VITE_API_B
 - **Pretend Money 10-Year Historical Allocation Sandbox (`/pretend-money`):**
   - `GET /api/live/stocks/:ticker/timeline-10y` fetches 10-year weekly OHLCV bars (`range=10y&interval=1wk`) for the requested NSE/BSE equity and aligns `NIFTY 50` (`^NSEI`) weekly closes in parallel (cached for 30 minutes), falling back deterministically to a snapshot-anchored 10-year series labelled `SYNTHETIC` / `DATED_SNAPSHOT` when offline.
   - `POST /api/live/stocks/:ticker/pretend-evaluate` runs `evaluatePretendMoneyTimeline` (`backend/src/domain/pretend-money/pretendMoneySimulator.ts`) using `decimal.js` to calculate tranche units, post-entry max drawdown, stop-loss trigger lock-in dates, annualized CAGR, and same-date `NIFTY 50` benchmark equivalence, routing all educational takeaway sentences through `scanSystemAuthoredText()`.
+- **Social Signal Intelligence (`/social-intelligence`, Phase 7):**
+  - Ephemeral in-memory research sessions (`backend/src/domain/research/researchSessionStore.ts`, 30-minute TTL, zero database persistence) exposed under `/api/research/sessions` (`POST /sessions`, `GET /sessions/:id`, `/status`, `/sources`, `/claims`, `POST /import`, `POST /chat` with SSE streaming, and `POST /voice-session`).
+  - Official-only zero-key & optional API source connectors (`backend/src/integrations/socialConnectors.ts`, `backend/src/integrations/publicRssConnectors.ts`): Reddit India Markets official Atom RSS (`r/IndianStockMarket`, `r/IndianStreetBets`, `r/IndiaInvestments`), Google News India official RSS, YouTube official Atom RSS (tracked creators + verified Indian market channels) + optional YouTube Data API v3, zero-key official YouTube/X oEmbed URL import (strict domain allowlist), optional X API v2, and manual user-submitted Telegram import (zero automated scraping).
+  - Grounded RAG chatbot (`backend/src/domain/research/researchChat.ts`) with clickable source citations, verified-facts vs. social-claims vs. missing-info breakdown, mandatory `scanSystemAuthoredText()` Output Guard, and server-side Sarvam voice readout / browser fallback.
 
 ## 12. Open Decisions to Confirm During Review
 

@@ -45,6 +45,8 @@ const envSchema = z.object({
   LIVE_MARKET_CACHE_TTL_MS: z.coerce.number().int().positive().default(45_000),
   YOUTUBE_MONITOR_ENABLED: envBoolean(true),
   YOUTUBE_POLL_INTERVAL_MS: z.coerce.number().int().min(30_000).default(180_000),
+  YOUTUBE_DATA_API_KEY: optionalNonEmptyString,
+  X_BEARER_TOKEN: optionalNonEmptyString,
   WHATSAPP_PROVIDER: z.enum(["dry_run", "twilio", "callmebot", "meta_cloud"]).default("dry_run"),
   TWILIO_ACCOUNT_SID: optionalNonEmptyString,
   TWILIO_AUTH_TOKEN: optionalNonEmptyString,

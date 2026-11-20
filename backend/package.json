@@ -12,7 +12,8 @@
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
-    "test": "vitest"
+    "test": "vitest",
+    "ingest:sebi": "tsx src/ingestion/importSebiRegister.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",

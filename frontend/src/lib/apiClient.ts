@@ -328,3 +328,180 @@ export function evaluatePretendMoney(params: {
     }
   );
 }
+
+// Phase 7: Social Signal Intelligence APIs
+export function createResearchSession(params: {
+  ticker: string;
+  company_name?: string;
+  exchange?: "NSE" | "BSE";
+  time_range?: import("../types/api").ResearchTimeRange;
+}): Promise<import("../types/api").ResearchSessionResponse> {
+  return apiJson<import("../types/api").ResearchSessionResponse>("/api/research/sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+}
+
+export function fetchResearchSession(
+  sessionId: string
+): Promise<import("../types/api").ResearchSessionResponse> {
+  return apiJson<import("../types/api").ResearchSessionResponse>(
+    `/api/research/sessions/${encodeURIComponent(sessionId)}`
+  );
+}
+
+export function importResearchSource(params: {
+  sessionId: string;
+  platform: import("../types/api").SocialPlatform;
+  creator_name?: string;
+  title?: string;
+  text?: string;
+  source_url?: string;
+  published_at?: string;
+}): Promise<import("../types/api").ResearchSessionResponse> {
+  return apiJson<import("../types/api").ResearchSessionResponse>(
+    `/api/research/sessions/${encodeURIComponent(params.sessionId)}/import`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        platform: params.platform,
+        creator_name: params.creator_name || undefined,
+        title: params.title || undefined,
+        text: params.text ?? "",
+        source_url: params.source_url || undefined,
+        published_at: params.published_at || undefined,
+      }),
+    }
+  );
+}
+
+export async function streamResearchChat(params: {
+  sessionId: string;
+  question: string;
+  language?: SupportedVoiceLanguage;
+  onToken: (delta: string) => void;
+  signal?: AbortSignal;
+}): Promise<import("../types/api").ResearchChatResponse> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/research/sessions/${encodeURIComponent(params.sessionId)}/chat`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream, application/json",
+      },
+      body: JSON.stringify({
+        question: params.question,
+        stream: true,
+        language: params.language ?? "en-IN",
+      }),
+      signal: params.signal,
+    }
+  );
+
+  if (!response.ok) {
+    let message = `Chat request failed (${response.status})`;
+    try {
+      const errBody = (await response.json()) as { error?: { message?: string } };
+      if (errBody?.error?.message) message = errBody.error.message;
+    } catch {
+      // ignore
+    }
+    throw new Error(message);
+  }
+
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("text/event-stream") || !response.body) {
+    const json = (await response.json()) as import("../types/api").ResearchChatResponse;
+    params.onToken(json.message.content);
+    return json;
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let finalPayload: import("../types/api").ResearchChatResponse | null = null;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const frames = buffer.split("\n\n");
+    buffer = frames.pop() ?? "";
+
+    for (const frame of frames) {
+      const lines = frame.split("\n");
+      let eventType = "message";
+      let dataStr = "";
+      for (const line of lines) {
+        if (line.startsWith("event:")) eventType = line.slice(6).trim();
+        if (line.startsWith("data:")) dataStr += line.slice(5).trim();
+      }
+      if (!dataStr) continue;
+      try {
+        const parsed = JSON.parse(dataStr) as {
+          delta?: string;
+          response?: import("../types/api").ResearchChatResponse;
+        };
+        if (eventType === "token" && typeof parsed.delta === "string") {
+          params.onToken(parsed.delta);
+        } else if (eventType === "done" && parsed.response) {
+          finalPayload = parsed.response;
+        }
+      } catch {
+        // ignore malformed partial frame
+      }
+    }
+  }
+
+  if (!finalPayload) {
+    throw new Error("Chat stream closed without a completed evidence payload.");
+  }
+  return finalPayload;
+}
+
+export function requestResearchVoiceSession(params: {
+  sessionId: string;
+  action: "init" | "synthesize";
+  text?: string;
+  language?: SupportedVoiceLanguage;
+}): Promise<import("../types/api").ResearchVoiceSessionResponse> {
+  return apiJson<import("../types/api").ResearchVoiceSessionResponse>(
+    `/api/research/sessions/${encodeURIComponent(params.sessionId)}/voice-session`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: params.action,
+        text: params.text,
+        language: params.language ?? "en-IN",
+      }),
+    }
+  );
+}
+
+export function transcribeResearchVoiceAudio(params: {
+  sessionId: string;
+  audioBlob: Blob;
+  language: SupportedVoiceLanguage;
+}): Promise<{
+  request_id: string;
+  session_id: string;
+  status: "READY" | "DISABLED" | "UNAVAILABLE";
+  language: SupportedVoiceLanguage;
+  transcript: string | null;
+  message: string;
+}> {
+  const form = new FormData();
+  form.append("file", params.audioBlob, "recording.webm");
+  form.append("language", params.language);
+  return apiJson(
+    `/api/research/sessions/${encodeURIComponent(params.sessionId)}/voice-stt`,
+    {
+      method: "POST",
+      body: form,
+    }
+  );
+}

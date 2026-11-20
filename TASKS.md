@@ -409,6 +409,16 @@ A checked box means the user has reviewed and accepted the task, not merely that
 - [x] Upgrade `HeroPage.tsx` (floating pill header + `44px × 44px` mobile glass drawer + provenance captions), `HeroStockWave.tsx` (passive `touchmove` candlestick interaction + `document.hidden` loop pause), `StickyBubblyNav` (`44px × 44px` touch targets + resting route label + safe-area bottom inset), `DashboardLayout.tsx`, and `index.css` (`.pt-safe`, `.pb-safe`, `.px-safe`, mobile `blur(10px)` glass performance, and `@media (hover: hover)` hover scoping).
 - [x] Verify with frontend ESLint, TypeScript typecheck, Vitest PWA unit tests, and production Vite build.
 
+## Phase 7 — Social Signal Intelligence (`/social-intelligence`)
+
+### 7.1 Implement Social Signal Intelligence backend, navbar pill, and research workspace (Pending User Review)
+
+- [ ] Add `Social Intelligence` pill (`/social-intelligence`, Phosphor `Sparkle`) to `StickyBubblyNav.tsx` with horizontal scroll support on smaller viewports and lazy-loaded route in `App.tsx`.
+- [ ] Implement temporary in-memory research session API under `/api/research/sessions` (`POST /sessions`, `GET /:id`, `/status`, `/sources`, `/claims`, `POST /import`, `POST /chat` with SSE streaming, `POST /voice-session`) using Express + Zod + deterministic Output Guard (`scanSystemAuthoredText`).
+- [ ] Connect official YouTube Data API v3 / official Atom RSS, official X API v2 (honestly `UNAVAILABLE` when unconfigured), and manual Telegram/transcript import (zero scraping).
+- [ ] Build `frontend/src/features/social-intelligence/SocialIntelligencePage.tsx` with Stock Research Header, Source Collection Panel, Research Overview, Evidence Explorer, grounded streaming AI Research Chatbot with clickable citations, and Voice Interaction with text fallback.
+- [ ] Verify with backend & frontend lint, typecheck, unit/integration tests, and production builds (local only; no deployment).
+
 ## Backlog / Deferred Beyond MVP
 
 - [ ] OS-level WhatsApp share-to-app integration, subject to privacy and platform-policy review.

@@ -13,6 +13,7 @@ import {
   Coins,
   FilmStrip,
   MagnifyingGlass,
+  Sparkle,
   SquaresFour,
   UsersThree,
   type IconProps,
@@ -32,6 +33,12 @@ const DEFAULT_BUBBLY_NAV_ITEMS: StickyBubblyNavItem[] = [
   { id: "stocks", to: "/stocks", label: "Live Stocks", icon: ChartLineUp },
   { id: "pretend-money", to: "/pretend-money", label: "Pretend Money", icon: Coins },
   { id: "finfluencers", to: "/finfluencers", label: "Finfluencers", icon: UsersThree },
+  {
+    id: "social-intelligence",
+    to: "/social-intelligence",
+    label: "Social Intelligence",
+    icon: Sparkle,
+  },
   { id: "corpus", to: "/corpus", label: "Demo Corpus", icon: FilmStrip },
   { id: "how-it-works", to: "/how-it-works", label: "How Checks Work", icon: BookOpenText },
 ];

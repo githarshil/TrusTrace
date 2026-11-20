@@ -4,6 +4,7 @@ import { classifyDisclosure } from "../domain/disclosure/classifier.js";
 import { detectHypePhrases } from "../domain/hype/detector.js";
 import type { ClaimLedger, DisclosureGradeResult, HypeFlag } from "../domain/types.js";
 import type { DemoCaseMeta, StockRecord } from "../ingestion/demoCorpus.js";
+import { extractTextFromPhotoWithGeminiVision } from "./freeLlmClaimParser.js";
 
 export const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8 MB
 export const MAX_VIDEO_BYTES = 25 * 1024 * 1024; // 25 MB
@@ -72,7 +73,11 @@ export interface MultimodalParseOutput {
     detected_mime: string | null;
     byte_length: number;
     persisted: false;
-    extraction_mode: "TEXT_ONLY" | "CURATED_DEMO_TRANSCRIPT" | "PROVIDER_UNAVAILABLE_FALLBACK";
+    extraction_mode:
+      | "TEXT_ONLY"
+      | "CURATED_DEMO_TRANSCRIPT"
+      | "GEMINI_VISION_OCR"
+      | "PROVIDER_UNAVAILABLE_FALLBACK";
     notice: string | null;
   };
   claims: ClaimLedger;
@@ -169,6 +174,164 @@ export function runBoundedMultimodalParse(params: {
         params.llmProvider === "disabled"
           ? "Media verified in memory and discarded immediately. Cloud OCR/ASR extraction is disabled in this environment — edit or paste visible text below, or continue directly with your entered influencer and stock names."
           : "Media extraction provider unavailable — continuing with your entered influencer and stock names.";
+      parserNote = "Structured influencer + stock lookup remains fully available.";
+    }
+
+    const claims = parseClaimLedgerDeterministic({
+      sourceText,
+      catalogue: catalogue.map((s) => ({
+        ticker: s.ticker,
+        company_name: s.company_name,
+        aliases: s.aliases,
+      })),
+      userEnteredStock: params.stockName,
+    });
+
+    const hype = detectHypePhrases(sourceText);
+    const disclosure = classifyDisclosure(sourceText);
+
+    return {
+      extracted_text: sourceText,
+      media_intake: {
+        received: Boolean(file),
+        kind: mediaKind,
+        detected_mime: detectedMime,
+        byte_length: byteLength,
+        persisted: false,
+        extraction_mode: extractionMode,
+        notice: mediaNotice,
+      },
+      claims,
+      hype_flags: hype.flags,
+      hype_dictionary_version: hype.dictionary_version,
+      disclosure_grade: disclosure,
+      parser: {
+        status: parserStatus,
+        version: CLAIM_PARSER_VERSION,
+        note: parserNote,
+      },
+    };
+  } finally {
+    // Discard transient uploaded media bytes immediately — never persist to disk, DB, or logs
+    if (file?.buffer && Buffer.isBuffer(file.buffer)) {
+      file.buffer.fill(0);
+    }
+  }
+}
+
+/**
+ * Async variant of the bounded multimodal parser that performs transient in-memory
+ * Gemini 2.5 Flash Vision OCR on uploaded photos (JPEG/PNG/WebP) when configured,
+ * then unconditionally zeroes the buffer in finally{} and feeds verbatim text into
+ * the deterministic Claim Ledger, Hype Detector, and Disclosure Grader.
+ */
+export async function runBoundedMultimodalParseAsync(params: {
+  text?: string;
+  influencerName?: string;
+  stockName?: string;
+  demoCaseId?: string;
+  file?: {
+    buffer: Buffer;
+    mimetype: string;
+    size: number;
+  };
+  catalogue: StockRecord[];
+  demoCases: DemoCaseMeta[];
+  llmProvider: string;
+  llmApiKey?: string;
+  fetchImpl?: typeof fetch;
+}): Promise<MultimodalParseOutput> {
+  const { file, catalogue, demoCases } = params;
+  let mediaKind: ValidatedMediaKind | null = null;
+  let detectedMime: string | null = null;
+  let byteLength = 0;
+
+  try {
+    if (file) {
+      byteLength = file.buffer.length;
+      const detected = detectMediaMagicBytes(file.buffer);
+      if (!detected) {
+        throw new AppError({
+          code: "UNSUPPORTED_MEDIA_TYPE",
+          message:
+            "Unsupported or corrupted media file. Upload a valid JPEG, PNG, WebP photo or MP4, WebM, MOV video.",
+          statusCode: 415,
+          retryable: false,
+        });
+      }
+      if (detected.kind === "PHOTO" && byteLength > MAX_IMAGE_BYTES) {
+        throw new AppError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Uploaded photo exceeds the 8 MB limit.",
+          statusCode: 413,
+          retryable: false,
+        });
+      }
+      if (detected.kind === "VIDEO" && byteLength > MAX_VIDEO_BYTES) {
+        throw new AppError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Uploaded video exceeds the 25 MB limit.",
+          statusCode: 413,
+          retryable: false,
+        });
+      }
+      mediaKind = detected.kind;
+      detectedMime = detected.detectedMime;
+    }
+
+    let sourceText = (params.text ?? "").trim();
+    let extractionMode: MultimodalParseOutput["media_intake"]["extraction_mode"] = "TEXT_ONLY";
+    let mediaNotice: string | null = null;
+    let parserStatus: MultimodalParseOutput["parser"]["status"] = "COMPLETED";
+    let parserNote: string | null = null;
+
+    if (!sourceText && params.demoCaseId) {
+      const matchedDemo = demoCases.find((d) => d.id === params.demoCaseId);
+      if (matchedDemo) {
+        sourceText = matchedDemo.sample_text;
+        extractionMode = "CURATED_DEMO_TRANSCRIPT";
+        mediaKind = matchedDemo.media_type;
+        mediaNotice =
+          "Loaded curated demo transcript/OCR text for this preloaded corpus asset. SEBI and market checks remain deterministic.";
+      }
+    } else if (
+      file &&
+      !sourceText &&
+      mediaKind === "PHOTO" &&
+      detectedMime &&
+      params.llmProvider.toLowerCase() === "gemini" &&
+      params.llmApiKey
+    ) {
+      const ocrText = await extractTextFromPhotoWithGeminiVision({
+        buffer: file.buffer,
+        mimeType: detectedMime,
+        apiKey: params.llmApiKey,
+        fetchImpl: params.fetchImpl,
+      });
+
+      if (ocrText) {
+        sourceText = ocrText;
+        extractionMode = "GEMINI_VISION_OCR";
+        parserStatus = "COMPLETED";
+        mediaNotice =
+          "Screenshot text extracted transiently in memory via Gemini Vision OCR. Uploaded image bytes were discarded immediately and never stored.";
+        parserNote = "Verbatim OCR text parsed through deterministic Claim Ledger and source-span checks.";
+      } else {
+        extractionMode = "PROVIDER_UNAVAILABLE_FALLBACK";
+        parserStatus = "FALLBACK_STRUCTURED_ONLY";
+        mediaNotice =
+          "Media verified in memory and discarded immediately. Screenshot OCR returned no legible text or provider was unavailable — edit or paste visible text below, or continue directly with your entered influencer and stock names.";
+        parserNote = "Structured influencer + stock lookup remains fully available.";
+      }
+    } else if (file && !sourceText) {
+      extractionMode = "PROVIDER_UNAVAILABLE_FALLBACK";
+      parserStatus = "FALLBACK_STRUCTURED_ONLY";
+      mediaNotice =
+        params.llmProvider === "disabled"
+          ? "Media verified in memory and discarded immediately. Cloud OCR/ASR extraction is disabled in this environment — edit or paste visible text below, or continue directly with your entered influencer and stock names."
+          : mediaKind === "VIDEO"
+            ? "Video verified in memory and discarded immediately. Automated video ASR is unavailable — paste the spoken/caption text below, or continue directly with your entered influencer and stock names."
+            : "Media extraction provider unavailable — continuing with your entered influencer and stock names.";
       parserNote = "Structured influencer + stock lookup remains fully available.";
     }
 
