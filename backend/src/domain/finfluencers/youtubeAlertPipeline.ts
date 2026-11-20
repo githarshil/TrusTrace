@@ -382,6 +382,16 @@ export async function syncInfluencerYouTubeFeed(params: {
     params.limit ?? 6
   );
 
+  // Ensure any newly subscribed user who hasn't received the most recent video alert yet receives it on sync
+  if (params.dispatchToSubscribers && latestVideos[0]) {
+    alertsDispatched += await dispatchAlertsForVideo({
+      analysis: latestVideos[0],
+      config: params.config,
+      alertRepo: params.alertRepo,
+      fetchImpl: params.fetchImpl,
+    });
+  }
+
   logInfo("youtube_pipeline.sync_completed", {
     influencer_id: params.influencer.id,
     fetched_from_rss: rssItems.length,

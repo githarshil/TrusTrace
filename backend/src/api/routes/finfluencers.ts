@@ -374,6 +374,15 @@ export function createFinfluencersRouter(params: {
         fetchImpl,
       });
 
+      await alertRepo.recordDeliveryLog({
+        subscription_id: subscription.id,
+        video_analysis_id: latestVideo.id,
+        provider: subscription.provider,
+        delivery_status: delivery.status,
+        message_preview: delivery.messagePreview,
+        error_code: delivery.errorCode,
+      });
+
       res.status(200).json({
         request_id: req.requestId ?? "req_unknown",
         video_id: latestVideo.video_id,

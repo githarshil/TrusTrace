@@ -40,6 +40,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
   const app = express();
 
   app.disable("x-powered-by");
+  app.set("trust proxy", 1);
   app.use(helmet());
   app.use(
     cors({

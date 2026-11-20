@@ -109,6 +109,13 @@ export function FinfluencersPage() {
       setTestAlertResult(null);
       setUnsubscribeMessage(null);
       void queryClient.invalidateQueries({ queryKey: ["finfluencers-directory"] });
+      // Automatically dispatch the first Output-Guarded WhatsApp alert immediately upon subscription
+      if (data.subscription.provider !== "dry_run") {
+        testAlertMutation.mutate({
+          influencerId: data.subscription.influencer_id,
+          subscription_id: data.subscription.id,
+        });
+      }
     },
   });
 
