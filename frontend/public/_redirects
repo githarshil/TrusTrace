@@ -1,2 +1,3 @@
-/api/*  https://trustrace-api.onrender.com/api/:splat  200
-/*      /index.html                                    200
+/api/*    https://trustrace-api.onrender.com/api/:splat                                               200
+/media/*  https://raw.githubusercontent.com/githarshil/TrusTrace/main/frontend/public/media/:splat    200
+/*        /index.html                                                                                 200
