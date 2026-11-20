@@ -23,8 +23,22 @@ import type {
   WhatsAppProviderKind,
 } from "../types/api";
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") || "http://localhost:8000";
+function resolveApiBaseUrl(): string {
+  const configured = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "") ?? "";
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    const isLocalBrowser = host === "localhost" || host === "127.0.0.1";
+    const isConfiguredLocal =
+      configured.includes("localhost") || configured.includes("127.0.0.1");
+    // On deployed domains (e.g. Netlify), never call localhost — use relative "/api/*" proxy or non-local configured URL
+    if (!isLocalBrowser) {
+      return isConfiguredLocal ? "" : configured;
+    }
+  }
+  return configured || "http://localhost:8000";
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 export interface HealthResponse {
   status: "ok" | "degraded";
