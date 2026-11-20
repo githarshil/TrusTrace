@@ -90,6 +90,19 @@ export function StickyBubblyNav({
     return () => clearCollapseTimer();
   }, []);
 
+  // Scroll active/stretched item into view on narrow phone screens when expanded
+  useEffect(() => {
+    if (!isExpanded) return;
+    const activeBtn = buttonRefs.current[stretchedIndex];
+    if (activeBtn && typeof activeBtn.scrollIntoView === "function") {
+      try {
+        activeBtn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      } catch {
+        // Ignore in jsdom
+      }
+    }
+  }, [isExpanded, stretchedIndex]);
+
   // Close on outside click or Escape key
   useEffect(() => {
     if (!isExpanded) return;
@@ -143,8 +156,8 @@ export function StickyBubblyNav({
     }
   }
 
-  const ActiveOrDefaultIcon =
-    (activeRouteIndex >= 0 ? items[activeRouteIndex]?.icon : undefined) ?? ChartLineUp;
+  const activeItem = activeRouteIndex >= 0 ? items[activeRouteIndex] : items[0];
+  const ActiveOrDefaultIcon = activeItem?.icon ?? ChartLineUp;
 
   return (
     <div className={`sticky-bubbly-nav-host ${className}`.trim()}>
@@ -199,8 +212,11 @@ export function StickyBubblyNav({
           }`}
         >
           <span className="sticky-bubbly-resting-handle" aria-hidden="true" />
-          <span className="sticky-bubbly-resting-icon-badge" aria-hidden="true">
-            <ActiveOrDefaultIcon size={16} weight="bold" />
+          <span className="sticky-bubbly-resting-row">
+            <span className="sticky-bubbly-resting-icon-badge" aria-hidden="true">
+              <ActiveOrDefaultIcon size={16} weight="bold" />
+            </span>
+            <span className="sticky-bubbly-resting-label">{activeItem?.label ?? "Navigate"}</span>
           </span>
         </button>
 

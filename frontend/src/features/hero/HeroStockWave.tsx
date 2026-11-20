@@ -118,12 +118,13 @@ export function HeroStockBackdrop({ interactionTargetRef }: HeroStockBackdropPro
     let smoothPointerX = -1;
     let pulseOriginX = -1;
     let pulseStartTime = -10;
+    let isPageVisible = typeof document !== "undefined" ? !document.hidden : true;
 
-    function handlePointerMove(event: PointerEvent) {
+    function updatePointerCoordinates(clientX: number, clientY: number) {
       const box = containerRef.current?.getBoundingClientRect();
       if (!box || box.width <= 0) return;
-      const xNorm = (event.clientX - box.left) / box.width;
-      const yNorm = (event.clientY - box.top) / Math.max(box.height, 1);
+      const xNorm = (clientX - box.left) / box.width;
+      const yNorm = (clientY - box.top) / Math.max(box.height, 1);
       if (xNorm >= 0 && xNorm <= 1) {
         pointerXNorm = xNorm;
         pointerYNorm = Math.max(0, Math.min(1, yNorm));
@@ -135,6 +136,16 @@ export function HeroStockBackdrop({ interactionTargetRef }: HeroStockBackdropPro
       }
     }
 
+    function handlePointerMove(event: PointerEvent) {
+      updatePointerCoordinates(event.clientX, event.clientY);
+    }
+
+    function handleTouchMove(event: TouchEvent) {
+      const touch = event.touches[0];
+      if (!touch) return;
+      updatePointerCoordinates(touch.clientX, touch.clientY);
+    }
+
     function handlePointerLeave() {
       pointerXNorm = null;
       if (reducedMotion) {
@@ -143,18 +154,29 @@ export function HeroStockBackdrop({ interactionTargetRef }: HeroStockBackdropPro
     }
 
     function handlePointerDown(event: PointerEvent) {
-      // Trigger a subtle wave pulse when user clicks anywhere in the hero backdrop
+      // Trigger a subtle wave pulse when user taps or clicks anywhere in the hero backdrop
       const box = containerRef.current?.getBoundingClientRect();
       if (!box || box.width <= 0) return;
       pulseOriginX = ((event.clientX - box.left) / box.width) * SVG_WIDTH;
       pulseStartTime = performance.now() / 1000;
+      updatePointerCoordinates(event.clientX, event.clientY);
+    }
+
+    function handleVisibilityChange() {
+      isPageVisible = !document.hidden;
+      if (isPageVisible && !reducedMotion && frameId === 0) {
+        frameId = window.requestAnimationFrame(renderFrame);
+      }
     }
 
     if (target) {
       target.addEventListener("pointermove", handlePointerMove, { passive: true });
+      target.addEventListener("touchmove", handleTouchMove, { passive: true });
       target.addEventListener("pointerleave", handlePointerLeave, { passive: true });
+      target.addEventListener("touchend", handlePointerLeave, { passive: true });
       target.addEventListener("pointerdown", handlePointerDown, { passive: true });
     }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     let frameId = 0;
 
@@ -305,18 +327,25 @@ export function HeroStockBackdrop({ interactionTargetRef }: HeroStockBackdropPro
         }
       }
 
-      if (!reducedMotion) {
+      if (!reducedMotion && isPageVisible) {
         frameId = window.requestAnimationFrame(renderFrame);
+      } else {
+        frameId = 0;
       }
     };
 
     frameId = window.requestAnimationFrame(renderFrame);
 
     return () => {
-      window.cancelAnimationFrame(frameId);
+      if (frameId !== 0) {
+        window.cancelAnimationFrame(frameId);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (target) {
         target.removeEventListener("pointermove", handlePointerMove);
+        target.removeEventListener("touchmove", handleTouchMove);
         target.removeEventListener("pointerleave", handlePointerLeave);
+        target.removeEventListener("touchend", handlePointerLeave);
         target.removeEventListener("pointerdown", handlePointerDown);
       }
     };

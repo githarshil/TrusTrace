@@ -1,5 +1,5 @@
 /* ==========================================================================
-   StickyBubblyNav — Bottom Docked Liquid Glass Notch with Clean Unclipped Pill
+   StickyBubblyNav — Bottom Docked Liquid Glass Notch (60fps Desktop & Phone PWA)
    ========================================================================== */
 
 .sticky-bubbly-nav-host {
@@ -9,7 +9,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 60px;
+  min-height: 58px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   flex-shrink: 0;
 }
 
@@ -29,7 +30,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: rgba(245, 242, 235, 0.88);
+  background: rgba(245, 242, 235, 0.9);
   backdrop-filter: blur(20px) saturate(155%);
   -webkit-backdrop-filter: blur(20px) saturate(155%);
   border: 1px solid rgba(24, 24, 27, 0.08);
@@ -37,40 +38,44 @@
     0 10px 28px -6px rgba(24, 32, 26, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.88);
   transform-origin: center bottom;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   will-change: transform, padding, box-shadow;
   transition:
-    padding 380ms cubic-bezier(0.34, 1.48, 0.64, 1),
-    background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding 340ms cubic-bezier(0.34, 1.48, 0.64, 1),
+    background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1);
   user-select: none;
 }
 
 .sticky-bubbly-notch--resting {
-  min-width: 124px;
+  min-width: 148px;
   height: 48px;
   padding: 6px 20px;
   cursor: pointer;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
-.sticky-bubbly-notch--resting:hover {
-  background: rgba(245, 242, 235, 0.95);
-  transform: translateY(-2px) scale(1.03);
+@media (hover: hover) and (pointer: fine) {
+  .sticky-bubbly-notch--resting:hover {
+    background: rgba(245, 242, 235, 0.96);
+    transform: translate3d(0, -2px, 0) scale(1.03);
+  }
 }
 
 .sticky-bubbly-notch--expanded {
-  min-width: 124px;
+  min-width: 148px;
   min-height: 56px;
-  padding: 7px 8px;
-  background: rgba(245, 242, 235, 0.94);
+  padding: 6px 8px;
+  background: rgba(245, 242, 235, 0.95);
   border-color: rgba(59, 110, 82, 0.16);
   box-shadow:
     0 18px 42px -8px rgba(24, 32, 26, 0.2),
     0 4px 12px -2px rgba(59, 110, 82, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  transform: translateY(-3px) scale(1.01);
+  transform: translate3d(0, -2px, 0) scale(1.01);
 }
 
 /* Resting Docked Trigger Layer (Smoothly cross-fades & scales in/out) */
@@ -81,28 +86,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
   height: 100%;
-  padding: 0;
+  padding: 0 12px;
   border: none;
   background: transparent;
   cursor: pointer;
   color: #243329;
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
   transition:
-    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) 70ms,
-    transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1) 40ms;
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1) 60ms,
+    transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1) 30ms;
 }
 
 .sticky-bubbly-resting-trigger--hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(8px) scale(0.55);
+  transform: translate3d(0, 8px, 0) scale(0.55);
   transition:
-    opacity 140ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 210ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 130ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 190ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sticky-bubbly-resting-handle {
@@ -112,23 +117,37 @@
   border-radius: 9999px;
   background: rgba(36, 51, 41, 0.32);
   transition:
-    width 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    background-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    width 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sticky-bubbly-resting-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .sticky-bubbly-resting-icon-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 24px;
-  border-radius: 8px;
+  width: 26px;
+  height: 22px;
+  border-radius: 7px;
   background: rgba(163, 184, 168, 0.34);
   color: #243329;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
   transition:
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    background-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sticky-bubbly-resting-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #161A18;
+  white-space: nowrap;
 }
 
 /* Expanded Bubbly Row Container — Continuous Two-Way Max-Width Interpolation */
@@ -137,8 +156,8 @@
   align-items: center;
   justify-content: center;
   transition:
-    max-width 390ms cubic-bezier(0.34, 1.32, 0.64, 1),
-    opacity 230ms cubic-bezier(0.22, 1, 0.36, 1);
+    max-width 360ms cubic-bezier(0.34, 1.32, 0.64, 1),
+    opacity 210ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sticky-bubbly-track-wrap--closed {
@@ -147,8 +166,8 @@
   overflow: hidden;
   pointer-events: none;
   transition:
-    max-width 300ms cubic-bezier(0.32, 0, 0.2, 1),
-    opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    max-width 280ms cubic-bezier(0.32, 0, 0.2, 1),
+    opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sticky-bubbly-track-wrap--open {
@@ -176,33 +195,33 @@
   align-items: center;
   transform-origin: center center;
   transition:
-    transform 370ms cubic-bezier(0.34, 1.54, 0.64, 1),
-    opacity 230ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--bubble-dist, 0) * 20ms);
+    transform 340ms cubic-bezier(0.34, 1.54, 0.64, 1),
+    opacity 210ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--bubble-dist, 0) * 18ms);
 }
 
 .sticky-bubbly-track-wrap--closed .sticky-bubbly-item-li {
   opacity: 0;
-  transform: translateY(8px) translateX(calc(var(--bubble-signed, 0) * -12px)) scale(0.5);
+  transform: translate3d(calc(var(--bubble-signed, 0) * -12px), 8px, 0) scale(0.5);
   transition:
-    transform 250ms cubic-bezier(0.36, 0, 0.66, -0.15),
-    opacity 160ms ease-out;
-  transition-delay: calc((3 - var(--bubble-dist, 0)) * 12ms);
+    transform 230ms cubic-bezier(0.36, 0, 0.66, -0.15),
+    opacity 150ms ease-out;
+  transition-delay: calc((3 - var(--bubble-dist, 0)) * 10ms);
 }
 
 .sticky-bubbly-track-wrap--open .sticky-bubbly-item-li {
   opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
-/* Individual Bubble Button — Circular at rest, Stretches Cleanly to Pill on Hover/Focus */
+/* Individual Bubble Button — Meets 44px touch target minimum on mobile (DESIGN.md §6.2) */
 .sticky-bubbly-bubble {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
-  min-width: 42px;
+  height: 44px;
+  min-width: 44px;
   padding: 0 12px;
   border: none;
   border-radius: 9999px;
@@ -216,11 +235,11 @@
   cursor: pointer;
   transform-origin: center center;
   transition:
-    background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    color 200ms cubic-bezier(0.22, 1, 0.36, 1),
-    padding 340ms cubic-bezier(0.34, 1.48, 0.64, 1),
-    transform 340ms cubic-bezier(0.34, 1.52, 0.64, 1),
-    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 310ms cubic-bezier(0.34, 1.48, 0.64, 1),
+    transform 310ms cubic-bezier(0.34, 1.52, 0.64, 1),
+    box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Current route indicator when resting as a circle inside expanded bar */
@@ -243,11 +262,11 @@
 
 /* Neighbor pull tension when adjacent bubble stretches */
 .sticky-bubbly-bubble--neighbor-left {
-  transform: translateX(-1.5px) scale(0.96);
+  transform: translate3d(-1.5px, 0, 0) scale(0.96);
 }
 
 .sticky-bubbly-bubble--neighbor-right {
-  transform: translateX(1.5px) scale(0.96);
+  transform: translate3d(1.5px, 0, 0) scale(0.96);
 }
 
 .sticky-bubbly-icon {
@@ -255,7 +274,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: transform 300ms cubic-bezier(0.34, 1.52, 0.64, 1);
+  transition: transform 280ms cubic-bezier(0.34, 1.52, 0.64, 1);
 }
 
 .sticky-bubbly-bubble--stretched .sticky-bubbly-icon {
@@ -268,19 +287,19 @@
   grid-template-columns: 0fr;
   opacity: 0;
   margin-left: 0;
-  transform: translateX(-4px);
+  transform: translate3d(-4px, 0, 0);
   transition:
-    grid-template-columns 330ms cubic-bezier(0.34, 1.4, 0.64, 1),
-    opacity 210ms cubic-bezier(0.22, 1, 0.36, 1),
-    margin-left 310ms cubic-bezier(0.34, 1.4, 0.64, 1),
-    transform 310ms cubic-bezier(0.34, 1.48, 0.64, 1);
+    grid-template-columns 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity 190ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 280ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    transform 280ms cubic-bezier(0.34, 1.48, 0.64, 1);
 }
 
 .sticky-bubbly-bubble--stretched .sticky-bubbly-label-wrap {
   grid-template-columns: 1fr;
   opacity: 1;
   margin-left: 8px;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .sticky-bubbly-label-inner {
@@ -293,7 +312,7 @@
   position: absolute;
   bottom: 4.5px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
   width: 4px;
   height: 4px;
   border-radius: 9999px;
@@ -306,25 +325,41 @@
   opacity: 0;
 }
 
-/* Mobile & Tablet Viewport Adjustments */
+/* Mobile & Tablet Viewport Adjustments (360px - 767px) */
 @media (max-width: 767px) {
   .sticky-bubbly-nav-host {
-    min-height: 54px;
+    min-height: 52px;
+  }
+
+  .sticky-bubbly-notch {
+    backdrop-filter: blur(12px) saturate(135%);
+    -webkit-backdrop-filter: blur(12px) saturate(135%);
   }
 
   .sticky-bubbly-notch--expanded {
     max-width: calc(100vw - 16px);
+    padding: 5px 6px;
+  }
+
+  .sticky-bubbly-track-wrap--open {
+    max-width: calc(100vw - 28px);
     overflow-x: auto;
-    padding: 6px 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sticky-bubbly-track-wrap--open::-webkit-scrollbar {
+    display: none;
   }
 
   .sticky-bubbly-list {
-    gap: 4px;
+    gap: 5px;
   }
 
   .sticky-bubbly-bubble {
-    height: 42px;
-    min-width: 42px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0 11px;
   }
 
   .sticky-bubbly-bubble--stretched {

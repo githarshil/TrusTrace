@@ -20,7 +20,10 @@ export function ProgressSteps({
   onSelectStep,
 }: ProgressStepsProps) {
   return (
-    <nav aria-label="Autopsy workflow progress" className="w-full overflow-x-auto pb-1">
+    <nav
+      aria-label="Autopsy workflow progress"
+      className="no-scrollbar-mobile w-full overflow-x-auto pb-1"
+    >
       <ol className="m-0 flex min-w-max list-none items-center gap-2 p-0">
         {STEPS.map((label, index) => {
           const stepNumber = (index + 1) as 1 | 2 | 3 | 4 | 5;
@@ -28,7 +31,7 @@ export function ProgressSteps({
           const isActive = stepNumber === activeStep;
           const clickable = Boolean(onSelectStep && stepNumber <= maxUnlockedStep);
 
-          const classes = `inline-flex min-h-[36px] items-center gap-2 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors ${
+          const classes = `inline-flex min-h-[44px] sm:min-h-[38px] items-center gap-2 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
             isActive
               ? "bg-[#161A18] text-[#FAF8F4]"
               : isComplete

@@ -112,7 +112,7 @@ export function TipTimeMachine({
                 key={opt}
                 type="button"
                 onClick={() => setRange(opt)}
-                className={`h-8 cursor-pointer rounded-full px-3 text-[12px] font-semibold transition-all ${
+                className={`min-h-[40px] min-w-[44px] cursor-pointer rounded-full px-3.5 text-[12px] font-semibold transition-all sm:min-h-[34px] ${
                   range === opt
                     ? "bg-white text-[#161A18] shadow-[0_2px_8px_rgba(22,26,24,0.08)]"
                     : "text-[#4A524D] hover:text-[#161A18]"

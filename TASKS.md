@@ -248,11 +248,11 @@ A checked box means the user has reviewed and accepted the task, not merely that
 
 ### 3.1 Responsive, accessible, and interaction polish
 
-- [ ] Review mobile layouts, touch targets, keyboard navigation, focus states, labels, contrast, and reduced motion.
-  - [ ] Add accessible chart summaries and marker list controls.
-  - [ ] Improve empty, stale, loading, and failure states.
-  - [ ] Remove unnecessary motion and trading-terminal visual cues.
-- [ ] Acceptance: no horizontal overflow on supported mobile widths and all primary interactions are keyboard-accessible.
+- [x] Review mobile layouts, touch targets, keyboard navigation, focus states, labels, contrast, and reduced motion.
+  - [x] Add accessible chart summaries and marker list controls.
+  - [x] Improve empty, stale, loading, and failure states.
+  - [x] Remove unnecessary motion and trading-terminal visual cues.
+- [x] Acceptance: no horizontal overflow on supported mobile widths and all primary interactions are keyboard-accessible.
 
 ### 3.2 Performance and resilience
 
@@ -395,6 +395,19 @@ A checked box means the user has reviewed and accepted the task, not merely that
 - [x] Add `frontend/src/features/pretend-money/PretendMoneyPage.tsx` and wire `/pretend-money` into `App.tsx`, `DashboardLayout.tsx` (Phosphor `Coins` icon), and `DashboardOverviewPage.tsx`.
 - [x] Provide universal NSE/BSE stock search, starting pretend wallet presets (`₹25k` to `₹10L`), click-to-allocate 10-year Recharts timeline, one-click historical scenarios (*Lump Sum 10Y Start*, *Chased Pre-Tip Run-Up Peak*, *Yearly Staggered Tranches*, *Pullback & Recovery Split*), optional stop-loss rule selector, interactive Time-Travel Evaluation Date scrubber, portfolio vs. `NIFTY 50` curve, and Output-Guarded evidence takeaways with mandatory disclaimer.
 - [x] Verify with backend & frontend lint, typecheck, unit/integration tests, and production builds.
+
+## Phase 6 — Progressive Web App (PWA) & 60fps Mobile Animation Polish
+
+### 6.1 Build installable PWA manifest, deterministic brand icons, and privacy-safe Service Worker
+
+- [x] Create `frontend/public/manifest.webmanifest`, `frontend/scripts/generate-pwa-icons.mjs` (`/pwa/icon.svg`, `192×192`, `512×512`, `maskable`, and `/apple-touch-icon.png`), standalone viewport-fit meta tags in `frontend/index.html`, and cache headers in `frontend/netlify.toml`.
+- [x] Implement `frontend/public/sw.js` caching static application shell assets while strictly excluding `/api/*` and non-`GET` requests (`NetworkOnly`) to preserve zero-persistence privacy and live vs. dated snapshot provenance.
+- [x] Add `frontend/src/lib/pwaClient.ts` and `frontend/src/components/ui/PwaStatusBanner.tsx` for offline provenance status and one-tap app installation.
+
+### 6.2 Polish 60fps mobile animations, safe-area insets, and touch ergonomics (`DESIGN.md`)
+
+- [x] Upgrade `HeroPage.tsx` (floating pill header + `44px × 44px` mobile glass drawer + provenance captions), `HeroStockWave.tsx` (passive `touchmove` candlestick interaction + `document.hidden` loop pause), `StickyBubblyNav` (`44px × 44px` touch targets + resting route label + safe-area bottom inset), `DashboardLayout.tsx`, and `index.css` (`.pt-safe`, `.pb-safe`, `.px-safe`, mobile `blur(10px)` glass performance, and `@media (hover: hover)` hover scoping).
+- [x] Verify with frontend ESLint, TypeScript typecheck, Vitest PWA unit tests, and production Vite build.
 
 ## Backlog / Deferred Beyond MVP
 

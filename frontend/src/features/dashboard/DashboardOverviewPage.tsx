@@ -124,10 +124,10 @@ export function DashboardOverviewPage() {
               value={quickInput}
               onChange={(e) => setQuickInput(e.target.value)}
               placeholder="Paste a Hinglish tip, or enter influencer & stock name..."
-              className="h-9 w-full bg-transparent text-[14px] text-[#161A18] placeholder:text-[#6E7771] focus:outline-none"
+              className="h-10 w-full bg-transparent text-[15px] text-[#161A18] placeholder:text-[#6E7771] focus:outline-none sm:h-9 sm:text-[14px]"
             />
           </div>
-          <Button type="submit" size="md" className="h-9 shrink-0 px-5 text-[13.5px]">
+          <Button type="submit" size="md" className="min-h-[44px] shrink-0 px-5 text-[13.5px] sm:min-h-[38px]">
             <span>Analyze</span>
             <ArrowRight size={15} weight="bold" aria-hidden="true" />
           </Button>
