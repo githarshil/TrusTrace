@@ -8,7 +8,7 @@
  * 3. Only cache static application shell assets (.html, .js, .css, fonts, icons, and curated static /media/*).
  */
 
-const CACHE_NAME = "tip-autopsy-static-v2";
+const CACHE_NAME = "tip-autopsy-static-v3";
 
 const PRECACHE_URLS = [
   "/",
